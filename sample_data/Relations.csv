@@ -1,0 +1,4 @@
+source_id,target_id,relationship_type,note
+doc1,draw1,documents,Primary doc for frame
+doc2,draw2,references,Welding reference
+draw1,draw2,contains,Frame contains fork subassembly

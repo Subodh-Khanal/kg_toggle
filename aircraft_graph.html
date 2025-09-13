@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#000000", "id": "Aircraft", "label": "Aircraft", "level": 0, "shape": "dot", "size": 25}, {"color": "#1f77b4", "id": "Hydraulic System", "label": "Hydraulic System", "level": 1, "shape": "dot", "size": 15}, {"color": "#1f77b4", "id": "Electrical System", "label": "Electrical System", "level": 1, "shape": "dot", "size": 15}, {"color": "#1f77b4", "id": "Fuel System", "label": "Fuel System", "level": 1, "shape": "dot", "size": 15}, {"color": "#2ca02c", "id": "Actuator", "label": "Actuator", "level": 2, "shape": "dot", "size": 15}, {"color": "#2ca02c", "id": "Hydraulic Pump", "label": "Hydraulic Pump", "level": 2, "shape": "dot", "size": 15}, {"color": "#2ca02c", "id": "Reservoir", "label": "Reservoir", "level": 2, "shape": "dot", "size": 15}, {"color": "#2ca02c", "id": "Battery", "label": "Battery", "level": 2, "shape": "dot", "size": 15}, {"color": "#2ca02c", "id": "Generator", "label": "Generator", "level": 2, "shape": "dot", "size": 15}, {"color": "#2ca02c", "id": "Wiring", "label": "Wiring", "level": 2, "shape": "dot", "size": 15}, {"color": "#ff7f0e", "id": "Landing Gear Bay", "label": "Landing Gear Bay", "level": 3, "shape": "dot", "size": 15}, {"color": "#9467bd", "id": "SAE-AS7949", "label": "SAE-AS7949", "level": 3, "shape": "dot", "size": 15}, {"color": "#d62728", "id": "Safran", "label": "Safran", "level": 4, "shape": "dot", "size": 15}, {"color": "#ff7f0e", "id": "Engine Bay", "label": "Engine Bay", "level": 3, "shape": "dot", "size": 15}, {"color": "#9467bd", "id": "MIL-PRF-5606", "label": "MIL-PRF-5606", "level": 3, "shape": "dot", "size": 15}, {"color": "#d62728", "id": "Parker Aerospace", "label": "Parker Aerospace", "level": 4, "shape": "dot", "size": 15}, {"color": "#ff7f0e", "id": "Fuselage", "label": "Fuselage", "level": 3, "shape": "dot", "size": 15}, {"color": "#9467bd", "id": "MIL-PRF-81757", "label": "MIL-PRF-81757", "level": 3, "shape": "dot", "size": 15}, {"color": "#d62728", "id": "Honeywell", "label": "Honeywell", "level": 4, "shape": "dot", "size": 15}, {"color": "#ff7f0e", "id": "Wing", "label": "Wing", "level": 3, "shape": "dot", "size": 15}, {"color": "#9467bd", "id": "FAA Part 25", "label": "FAA Part 25", "level": 3, "shape": "dot", "size": 15}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "Aircraft", "label": "includes", "relation": "includes", "title": "includes", "to": "Hydraulic System", "width": 1}, {"arrows": "to", "from": "Aircraft", "label": "includes", "relation": "includes", "title": "includes", "to": "Electrical System", "width": 1}, {"arrows": "to", "from": "Aircraft", "label": "includes", "relation": "includes", "title": "includes", "to": "Fuel System", "width": 1}, {"arrows": "to", "from": "Hydraulic System", "label": "includes", "relation": "includes", "title": "includes", "to": "Actuator", "width": 1}, {"arrows": "to", "from": "Hydraulic System", "label": "includes", "relation": "includes", "title": "includes", "to": "Hydraulic Pump", "width": 1}, {"arrows": "to", "from": "Hydraulic System", "label": "includes", "relation": "includes", "title": "includes", "to": "Reservoir", "width": 1}, {"arrows": "to", "from": "Electrical System", "label": "includes", "relation": "includes", "title": "includes", "to": "Battery", "width": 1}, {"arrows": "to", "from": "Electrical System", "label": "includes", "relation": "includes", "title": "includes", "to": "Generator", "width": 1}, {"arrows": "to", "from": "Electrical System", "label": "includes", "relation": "includes", "title": "includes", "to": "Wiring", "width": 1}, {"arrows": "to", "from": "Actuator", "label": "located in", "relation": "located in", "title": "located in", "to": "Landing Gear Bay", "width": 1}, {"arrows": "to", "from": "Actuator", "label": "conforms to", "relation": "conforms to", "title": "conforms to", "to": "SAE-AS7949", "width": 1}, {"arrows": "to", "from": "Actuator", "label": "supplied by", "relation": "supplied by", "title": "supplied by", "to": "Safran", "width": 1}, {"arrows": "to", "from": "Hydraulic Pump", "label": "located in", "relation": "located in", "title": "located in", "to": "Engine Bay", "width": 1}, {"arrows": "to", "from": "Hydraulic Pump", "label": "uses fluid spec", "relation": "uses fluid spec", "title": "uses fluid spec", "to": "MIL-PRF-5606", "width": 1}, {"arrows": "to", "from": "Hydraulic Pump", "label": "supplied by", "relation": "supplied by", "title": "supplied by", "to": "Parker Aerospace", "width": 1}, {"arrows": "to", "from": "Battery", "label": "located in", "relation": "located in", "title": "located in", "to": "Fuselage", "width": 1}, {"arrows": "to", "from": "Battery", "label": "conforms to", "relation": "conforms to", "title": "conforms to", "to": "MIL-PRF-81757", "width": 1}, {"arrows": "to", "from": "Battery", "label": "supplied by", "relation": "supplied by", "title": "supplied by", "to": "Honeywell", "width": 1}, {"arrows": "to", "from": "Generator", "label": "located in", "relation": "located in", "title": "located in", "to": "Engine Bay", "width": 1}, {"arrows": "to", "from": "Generator", "label": "supplied by", "relation": "supplied by", "title": "supplied by", "to": "Honeywell", "width": 1}, {"arrows": "to", "from": "Wiring", "label": "routed through", "relation": "routed through", "title": "routed through", "to": "Wing", "width": 1}, {"arrows": "to", "from": "Wiring", "label": "regulated under", "relation": "regulated under", "title": "regulated under", "to": "FAA Part 25", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"layout": {"hierarchical": {"enabled": true, "direction": "UD", "sortMethod": "directed", "levelSeparation": 180, "nodeSpacing": 200}}, "nodes": {"borderWidth": 1, "shadow": true}, "edges": {"smooth": true, "arrows": {"to": {"enabled": true}}}, "physics": {"hierarchicalRepulsion": {"nodeDistance": 180}, "stabilization": {"enabled": true, "iterations": 200}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
